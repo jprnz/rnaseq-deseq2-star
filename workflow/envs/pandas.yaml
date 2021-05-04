@@ -1,5 +1,4 @@
 channels:
   - conda-forge
-  - bioconda
 dependencies:
-  - bioconda::gffutils=0.9
+  - pandas =1.1

@@ -9,63 +9,80 @@ properties:
     type: string
   units:
     type: string
-  trimming:
-    type: object
-    properties:
-      skip:
-        type: boolean
-      adapter:
-        type: string
-        pattern: "^[ACGT]+$"
 
   ref:
     type: object
     properties:
-      index:
+      species:
         type: string
-      annotation:
+      release:
+        type: integer
+      build:
         type: string
     required:
-      - index
-      - annotation
+      - species
+      - release
+      - build
+
+  trimming:
+    type: object
+    properties:
+      activate:
+        type: boolean
+    required:
+      - activate
+  
+  mergeReads:
+    type: object
+    properties:
+      activate:
+        type: boolean
+    required:
+      - activate
 
   pca:
     type: object
     properties:
+      activate:
+       type: boolean
       labels:
         type: array
         items:
           type: string
     required:
       - labels
+      - activate
 
   diffexp:
     type: object
     properties:
       contrasts:
         type: object
+      model:
+        type: string
     required:
       - contrasts
 
   params:
     type: object
     properties:
-      star: 
+      cutadapt-pe:
         type: string
       cutadapt-se:
         type: string
-      cutadapt-pe:
+      star: 
         type: string
     required:
-      - star
-      - cutadapt-se
       - cutadapt-pe
+      - cutadapt-se
+      - star
 
 required:
   - samples
   - units
-  - trimming
   - ref
   - pca
   - diffexp
   - params
+  - trimming
+  - mergeReads

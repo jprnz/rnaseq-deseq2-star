@@ -1,15 +1,12 @@
 rule count_matrix:
     input:
-        expand(
-            "star/{unit.sample}-{unit.unit}/ReadsPerGene.out.tab",
-            unit=units.itertuples(),
-        ),
+        get_star_output,
     output:
-        "counts/all.tsv",
+        "results/counts/all.tsv",
     log:
         "logs/count-matrix.log",
     params:
-        samples=units["sample"].tolist(),
+        samples=units["sample_name"].tolist(),
         strand=get_strandedness(units),
     conda:
         "../envs/pandas.yaml"
@@ -19,11 +16,12 @@ rule count_matrix:
 
 rule deseq2_init:
     input:
-        counts="counts/all.tsv",
+        counts="results/counts/all.tsv",
     output:
-        "deseq2/all.rds",
+        "results/deseq2/all.rds",
     params:
         samples=config["samples"],
+        model=config["diffexp"]["model"],
     conda:
         "../envs/deseq2.yaml"
     log:
@@ -35,7 +33,7 @@ rule deseq2_init:
 
 rule pca:
     input:
-        "deseq2/all.rds",
+        "results/deseq2/all.rds",
     output:
         report("results/pca.svg", "../report/pca.rst"),
     params:
@@ -50,7 +48,7 @@ rule pca:
 
 rule deseq2:
     input:
-        "deseq2/all.rds",
+        "results/deseq2/all.rds",
     output:
         table=report(
             "results/diffexp/{contrast}.diffexp.tsv", "../report/diffexp.rst"
