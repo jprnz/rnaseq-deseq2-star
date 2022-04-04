@@ -1,40 +1,63 @@
+import os
+import warnings
+import pandas as pd
+
 from snakemake.utils import min_version
 
-##### set minimum snakemake version #####
-min_version("6.4.1")
+# Turn off performance warnings
+warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
 
 
-##### setup report #####
+# Set min version for Snakemake
+min_version("7.2.1")
+
+# Read in config
 configfile: "config/config.yaml"
 
-
-report: "report/workflow.rst"
-
-
-##### setup singularity #####
-
-
-# this container defines the underlying OS for each job when using the workflow
-# with --use-conda --use-singularity
+# When using --use-conda --use-singularity, this sets the OS used
 container: "docker://continuumio/miniconda3"
 
+# Paths
+datadir = config['datadir']
 
-##### load rules #####
+# Configuration variables
+reference_path = config['reference_path']
+reference_args = config['reference_args']
+
+# Load fastq files
+files = (
+    pd.read_csv(config['samples'], sep='\t', dtype='object')
+    .set_index(["sample", "pair"])
+    .sort_index())
+
+samples = list(files.index.levels[0])
+pairs = list(files.index.levels[1])
+import ipdb; ipdb.set_trace()
+
+# Paths
+star_index = reference_path + "/{species}/{release}-{build}/star-index".format(**reference_args)
+
+# More paths
+fastqdir   = f"{datadir}/d00_fastq"
+fastpdir   = f"{datadir}/d01_fastp"
+stardir    = f"{datadir}/d02_star"
+rseqcdir   = f"{datadir}/d03_rseqc"
+multiqcdir = f"{datadir}/d04_multiqc"
+deseqdir   = f"{datadir}/d05_deseq"
 
 
-include: "rules/common.smk"
-include: "rules/ref.smk"
-include: "rules/trim.smk"
-include: "rules/qc.smk"
-include: "rules/align.smk"
-include: "rules/diffexp.smk"
+# Rules
+include: "rules/reference.smk"
+#include: "rules/fastq.smk"
+#include: "rules/fastp.smk"
+#include: "rules/qc.smk"
+#include: "rules/star.smk"
+#include: "rules/diffexp.smk"
 
 
-##### target rules #####
-
-
-rule all:
-    input:
-        get_final_output(),
-        "results/qc/multiqc_report.html",
-        "results/pca.svg",
+# Main target
+#rule all:
+#    input:
+#        get_final_output(),
+#        "results/qc/multiqc_report.html",
+#        "results/pca.svg",

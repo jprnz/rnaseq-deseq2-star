@@ -1,37 +1,40 @@
-# path or URL to sample sheet (TSV format, columns: sample, condition, ...)
+# Path to tsv describing fastq files (ie, sample, pair, path)
 samples: config/samples.tsv
-# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
-# Units are technical replicates (e.g. lanes, or resequencing of the same biological
-# sample).
-units: config/units.tsv
 
+# Output path
+datadir: "processed"
 
-ref:
+reference_args:
   # Ensembl species name
   species: homo_sapiens
+
   # Ensembl release (make sure to take one where snpeff data is available, check 'snpEff databases' output)
   release: 100
+
   # Genome build
   build: GRCh38
 
-trimming:
-  activate: False
+# Where to store reference files 
+reference_path: "../ensembl-reference"
 
-pca:
-  activate: True
-  labels:
-    # columns of sample sheet to use for PCA
-    - condition
+# trimming:
+#   activate: False
 
-diffexp:
-  # contrasts for the deseq2 results method
-  contrasts:
-    A-vs-B:
-      - A
-      - B
-  model: ~condition
+# pca:
+#   activate: True
+#   labels:
+#     # columns of sample sheet to use for PCA
+#     - condition
 
-params:
-  cutadapt-pe: ""
-  cutadapt-se: ""
-  star: "--outSAMtype BAM Unsorted"
+# diffexp:
+#   # contrasts for the deseq2 results method
+#   contrasts:
+#     A-vs-B:
+#       - A
+#       - B
+#   model: ~condition
+
+# params:
+#   cutadapt-pe: ""
+#   cutadapt-se: ""
+#   star: "--outSAMtype BAM Unsorted"
