@@ -1,5 +1,7 @@
-sample_name	condition
-A1	treated
-B1	untreated
-A2	treated
-B2	untreated
+sample	pair	path
+A	R1	data/A-01_R1.fastq.gz
+A	R1	data/A-01_R1.fastq.gz
+A	R2	data/A-01_R2.fastq.gz
+A	R2	data/A-01_R2.fastq.gz
+B	R1	data/A-01_R1.fastq.gz
+B	R2	data/A-01_R2.fastq.gz

@@ -30,9 +30,18 @@ files = (
     .set_index(["sample", "pair"])
     .sort_index())
 
+# Sample and pairs names
 samples = list(files.index.levels[0])
 pairs = list(files.index.levels[1])
-import ipdb; ipdb.set_trace()
+
+# Ensure all samples are paired
+sample_pairs = (
+        files.reset_index()
+        .groupby('sample')
+        .pair.unique())
+
+if not all([len(v) == 2 for v in sample_pairs]):
+    raise ValueError("Workflow only supports paired-end samples")
 
 # Paths
 star_index = reference_path + "/{species}/{release}-{build}/star-index".format(**reference_args)
@@ -46,12 +55,18 @@ multiqcdir = f"{datadir}/d04_multiqc"
 deseqdir   = f"{datadir}/d05_deseq"
 
 
+# Set constraints for wildcards
+wildcard_constraints:
+    sample  = "|".join(samples),
+    pair    = "|".join(pairs)
+
 # Rules
 include: "rules/reference.smk"
-#include: "rules/fastq.smk"
-#include: "rules/fastp.smk"
-#include: "rules/qc.smk"
-#include: "rules/star.smk"
+include: "rules/fastq.smk"
+include: "rules/fastp.smk"
+include: "rules/star.smk"
+include: "rules/rseqc.smk"
+include: "rules/multiqc.smk"
 #include: "rules/diffexp.smk"
 
 

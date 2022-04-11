@@ -1,5 +1,6 @@
+name: rseqc
 channels:
-  - conda-forge
   - bioconda
+  - conda-forge
 dependencies:
   - rseqc =4.0
