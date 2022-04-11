@@ -5,8 +5,8 @@
 !scripts/common/*
 scripts/.snakemake*
 !Snakefile
-!config.yaml
-!samples.tsv
+!config
+!config/*
 !resources
 !resources/*
 !envs
@@ -21,3 +21,6 @@ scripts/.snakemake*
 !.gitattributes
 !.test
 !.test/data
+!.test/data/*
+!.test/config
+!.test/config/*
