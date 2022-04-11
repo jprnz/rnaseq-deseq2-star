@@ -7,11 +7,15 @@ scripts/.snakemake*
 !Snakefile
 !config
 !config/*
+!cluster
+!cluster/slurm
+!cluster/slurm/*
 !resources
 !resources/*
 !envs
 !envs/*
 !snakemake.yaml
+!snakemake_slurm.sh
 !LICENSE
 !README.md
 !rules
