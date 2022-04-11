@@ -14,7 +14,7 @@ rule star:
     conda:
         "../envs/star.yaml"
     resources:
-        mem_mb = 16000
+        mem_mb = 48000
     group:
         "star"
     threads: 16
@@ -65,8 +65,9 @@ rule star_index_bam:
         "../envs/star.yaml"
     group:
         "star"
+    threads: 5
     shell:
-        "(set -x; samtools index -\@ 4 {input}) &> {log}"
+        "(set -x; samtools index -\@ 5 {input}) &> {log}"
 
 
 rule run_star:
