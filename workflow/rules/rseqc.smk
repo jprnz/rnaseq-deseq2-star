@@ -173,6 +173,8 @@ rule rseqc_gene_body_coverage:
         prefix = rseqcdir + "/{sample}/{sample}"
     conda:
         "../envs/rseqc.yaml"
+    resources:
+        mem_mb = 16000
     shell:
         "(set -x; geneBody_coverage.py "
         "-i {input.bam} "
