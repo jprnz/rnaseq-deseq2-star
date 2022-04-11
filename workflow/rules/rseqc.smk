@@ -2,7 +2,8 @@ rule rseqc_gtf2bed:
     input:
         genome_gtf
     output:
-        bed = rseqcdir + "/annotation.bed"
+        bed = rseqcdir + "/annotation.bed",
+        db = temp(rseqcdir + "/annotation.db")
     log:
         rseqcdir + "/logs/rseqc_gtf2bed.log"
     conda:
