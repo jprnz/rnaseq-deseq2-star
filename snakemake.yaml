@@ -1,0 +1,11 @@
+name: snakemake
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - snakemake =7.3.8
+  - conda-pack
+  - cookiecutter
+  - ipdb
+  - ipython
+  - mamba
