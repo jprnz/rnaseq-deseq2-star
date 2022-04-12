@@ -10,7 +10,7 @@ reference_args:
   build: GRCh38
 
 # Where to store reference files 
-reference_path: "../ensembl-reference"
+reference_path: "../../ensembl-reference"
 
 # Set stradedness, options:
 #   none: unstranded

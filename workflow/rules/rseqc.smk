@@ -1,4 +1,4 @@
-rule rseqc_gtf2bed:
+rule rseqc_make_bed:
     input:
         genome_gtf
     output:
@@ -9,7 +9,7 @@ rule rseqc_gtf2bed:
     conda:
         "../envs/gffutils.yaml"
     script:
-        "../scripts/gtf2bed.py"
+        "../scripts/rseqc-bed.py"
 
 
 rule rseqc_junction_annotation:

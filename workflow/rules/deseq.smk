@@ -21,8 +21,8 @@ rule deseq_dds:
     input:
         counts = deseqdir + "/counts.tsv"
     output:
-        deseqdir + "/dds.rds",
-        deseqdir + "/normalized-counts.tsv"
+        dds = deseqdir + "/dds.rds",
+        norm = deseqdir + "/normalized-counts.tsv"
     log:
         deseqdir + "/logs/deseq-init.log"
     params:
@@ -44,12 +44,12 @@ rule deseq_results:
         deseqdir + "/logs/{analysis}-deseq.log"
     params:
         model = lambda wc: analyses[wc.analysis]['model'],
-        contrasts = lambda wc: analyses[wc.analysis]['contrast']
+        contrasts = lambda wc: analyses[wc.analysis]['contrasts']
     conda:
         "../envs/deseq2.yaml"
     threads: 1
     script:
-        "../scripts/deseq2-analysis.R"
+        "../scripts/deseq-analysis.R"
 
 rule run_deseq:
     input:
