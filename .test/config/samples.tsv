@@ -1,7 +1,3 @@
-sample	pair	path
-A	R1	data/A-01_R1.fastq.gz
-A	R1	data/A-01_R1.fastq.gz
-A	R2	data/A-01_R2.fastq.gz
-A	R2	data/A-01_R2.fastq.gz
-B	R1	data/A-01_R1.fastq.gz
-B	R2	data/A-01_R2.fastq.gz
+sample	condition
+A	A
+B	B

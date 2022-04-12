@@ -13,6 +13,7 @@ min_version("7.2.1")
 
 # Read in config
 configfile: "config/config.yaml"
+configfile: "config/analysis.yaml"
 
 # When using --use-conda --use-singularity, this sets the OS used
 container: "docker://continuumio/miniconda3"
@@ -26,7 +27,7 @@ reference_args = config['reference_args']
 
 # Load fastq files
 files = (
-    pd.read_csv(config['samples'], sep='\t', dtype='object')
+    pd.read_csv(config['fastqs'], sep='\t', dtype='object')
     .set_index(["sample", "pair"])
     .sort_index())
 
@@ -67,7 +68,7 @@ include: "rules/fastp.smk"
 include: "rules/star.smk"
 include: "rules/rseqc.smk"
 include: "rules/multiqc.smk"
-#include: "rules/diffexp.smk"
+include: "rules/deseq.smk"
 
 
 # Main target

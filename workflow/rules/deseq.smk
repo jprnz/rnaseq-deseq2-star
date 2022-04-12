@@ -1,82 +1,57 @@
+strandedness = [config['strandedness'] for v in samples]
+
+analyses = config['analyses']
+
 rule count_matrix:
     input:
-        expand(
-            "results/star/{unit.sample_name}-{unit.unit_name}/ReadsPerGene.out.tab",
-            unit=units.itertuples(),
-        ),
+        expand(stardir + "/{sample}/{sample}_ReadsPerGene.out.tab", sample=samples)
     output:
-        "results/counts/all.tsv",
+        deseqdir + "/counts.tsv",
     log:
-        "logs/count-matrix.log",
+        deseqdir + "/logs/count-matrix.log"
     params:
-        samples=units["sample_name"].tolist(),
-        strand=get_strandedness(units),
+        samples=samples,
+        strand=strandedness
     conda:
         "../envs/pandas.yaml"
     script:
         "../scripts/count-matrix.py"
 
-
-rule gene_2_symbol:
+rule deseq_dds:
     input:
-        counts="{prefix}.tsv",
+        counts = deseqdir + "/counts.tsv"
     output:
-        symbol="{prefix}.symbol.tsv",
-    params:
-        species=get_bioc_species_name(),
+        deseqdir + "/dds.rds",
+        deseqdir + "/normalized-counts.tsv"
     log:
-        "logs/gene2symbol/{prefix}.log",
-    conda:
-        "../envs/biomart.yaml"
-    script:
-        "../scripts/gene2symbol.R"
-
-
-rule deseq2_init:
-    input:
-        counts="results/counts/all.tsv",
-    output:
-        "results/deseq2/all.rds",
-        "results/deseq2/normcounts.tsv",
+        deseqdir + "/logs/deseq-init.log"
     params:
-        samples=config["samples"],
-        model=config["diffexp"]["model"],
+        samples = config["samples"]
     conda:
         "../envs/deseq2.yaml"
-    log:
-        "logs/deseq2/init.log",
-    threads: get_deseq2_threads()
+    threads: 1
     script:
-        "../scripts/deseq2-init.R"
+        "../scripts/deseq-init.R"
 
-
-rule pca:
+rule deseq_results:
     input:
-        "results/deseq2/all.rds",
+        dds = deseqdir + "/dds.rds"
     output:
-        report("results/pca.svg", "../report/pca.rst"),
+        dds = deseqdir + "/{analysis}/dds.rds",
+        res = deseqdir + "/{analysis}/results.rds",
+        xlsx = deseqdir + "/{analysis}/diffexp.xlsx"
+    log:
+        deseqdir + "/logs/{analysis}-deseq.log"
     params:
-        pca_labels=config["pca"]["labels"],
+        model = lambda wc: analyses[wc.analysis]['model'],
+        contrasts = lambda wc: analyses[wc.analysis]['contrast']
     conda:
         "../envs/deseq2.yaml"
-    log:
-        "logs/pca.log",
+    threads: 1
     script:
-        "../scripts/plot-pca.R"
+        "../scripts/deseq2-analysis.R"
 
-
-rule deseq2:
+rule run_deseq:
     input:
-        "results/deseq2/all.rds",
-    output:
-        table=report("results/diffexp/{contrast}.diffexp.tsv", "../report/diffexp.rst"),
-        ma_plot=report("results/diffexp/{contrast}.ma-plot.svg", "../report/ma.rst"),
-    params:
-        contrast=get_contrast,
-    conda:
-        "../envs/deseq2.yaml"
-    log:
-        "logs/deseq2/{contrast}.diffexp.log",
-    threads: get_deseq2_threads
-    script:
-        "../scripts/deseq2.R"
+        expand(deseqdir + "/{analysis}/diffexp.xlsx", analysis=analyses)
+

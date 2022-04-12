@@ -1,17 +1,20 @@
-import sys
-
 # logging
 sys.stderr = open(snakemake.log[0], "w")
 
+import sys
+
 import pandas as pd
 
+from collections import namedtuple
 
-def get_column(strandedness):
-    if pd.isnull(strandedness) or strandedness == "none":
+Sample = namedtuple("Sample", ['name', 'strand'])
+
+def get_column(strand):
+    if pd.isnull(strand) or strand == "none":
         return 1  # non stranded protocol
-    elif strandedness == "yes":
+    elif strand == "yes":
         return 2  # 3rd column
-    elif strandedness == "reverse":
+    elif strand == "reverse":
         return 3  # 4th column, usually for Illumina truseq
     else:
         raise ValueError(
@@ -19,22 +22,37 @@ def get_column(strandedness):
                 "'strandedness' column should be empty or have the "
                 "value 'none', 'yes' or 'reverse', instead has the "
                 "value {}"
-            ).format(repr(strandedness))
+            ).format(repr(strand))
         )
 
-
-counts = [
-    pd.read_table(
-        f, index_col=0, usecols=[0, get_column(strandedness)], header=None, skiprows=4
+def read_file(file, sample):
+    column = get_column(sample.strand)
+    return pd.read_table(
+        file,
+        skiprows=4,
+        index_col=0,
+        header=None,
+        names=["gene_id", sample.name],
+        usecols=[0, column],
+        dtype=object
     )
-    for f, strandedness in zip(snakemake.input, snakemake.params.strand)
+
+
+# Get all per-sample info
+samples = [
+    Sample(sample, strand)
+    for sample, strand in zip(snakemake.params.samples, snakemake.params.strand)
 ]
 
-for t, sample in zip(counts, snakemake.params.samples):
-    t.columns = [sample]
+# Read files
+counts = [
+    read_file(f, sample)
+    for f, sample in zip(snakemake.input, samples)
+]
 
+# Combine
 matrix = pd.concat(counts, axis=1)
-matrix.index.name = "gene"
-# collapse technical replicates
-matrix = matrix.groupby(matrix.columns, axis=1).sum()
+matrix.index.name = "gene_id"
+
+# Write
 matrix.to_csv(snakemake.output[0], sep="\t")

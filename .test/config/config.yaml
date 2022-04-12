@@ -1,21 +1,34 @@
-# Path to tsv describing fastq files (ie, sample, pair, path)
-samples: config/samples.tsv
-
-# Output path
-datadir: "processed"
-
+# Define reference to use
 reference_args:
   # Ensembl species name
   species: homo_sapiens
 
-  # Ensembl release (make sure to take one where snpeff data is available, check 'snpEff databases' output)
+  # Ensembl release 
   release: 100
 
   # Genome build
   build: GRCh38
 
-# Where to store reference files (relative to .snakemake directory)
-reference_path: "../../ensembl-reference"
+# Where to store reference files 
+reference_path: "../ensembl-reference"
+
+# Set stradedness, options:
+#   none: unstranded
+#   yes: first read strand aligned 
+#   reverse: second read strand aligned (common for Illumina TruSeq)
+strandedness: reverse
+
+# Path to tsv describing fastq files (ie, sample, pair, path)
+fastqs: config/fastqs.tsv
+
+# Path to table describing analysis conditions
+samples: config/samples.tsv
+
+# Path to file describing models for analysis
+analysis: config/analysis.yaml 
+
+# Output path
+datadir: "processed"
 
 # trimming:
 #   activate: False

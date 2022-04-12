@@ -1,0 +1,7 @@
+analyses:
+  - analysis: A-vs-B
+    model: ~ condition
+    contrasts:
+        - ["condidion", "A", "B"]
+        - ["condition", "C", "C"]
+
