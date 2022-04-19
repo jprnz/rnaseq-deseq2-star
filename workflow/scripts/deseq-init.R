@@ -2,8 +2,6 @@
 log <- file(snakemake@log[[1]], open="wt")
 sink(log, type="output")
 sink(log, type="message")
-str(snakemake)
-getwd()
 
 
 # Ensure we have all parameters
@@ -14,6 +12,7 @@ normfile <- snakemake@output[["norm"]]
 threads <- snakemake@threads
 
 library("DESeq2")
+library("data.table")
 
 parallel <- FALSE
 if (threads > 1) {
@@ -33,12 +32,12 @@ coldata <- read.table(
 
 # Use given row-order to determine factor levels
 for (column in colnames(coldata)) {
-    if (is.factor(coldata[, column])) {
-        vals = coldata$column
+    if (is.character(coldata[, column])) {
+        vals = coldata[, column]
         coldata[, column] <- factor(vals, levels=unique(vals))
     }
 }
-
+str(coldata)
 
 # Counts columns will be reordered to match sample data
 cts <- read.table(
@@ -48,7 +47,6 @@ cts <- read.table(
     check.names=FALSE)
 cts <- cts[, rownames(coldata)]
 
-
 # Create DDS object
 dds <- DESeqDataSetFromMatrix(
     countData=cts,
@@ -56,7 +54,7 @@ dds <- DESeqDataSetFromMatrix(
     design= ~ 1)
 
 
-# Remove uninformative genes (
+# Remove uninformative genes
 dds <- dds[ rowSums(counts(dds)) >= 10, ]
 
 
@@ -70,8 +68,5 @@ saveRDS(dds, file=ddsfile)
 
 # Write normalized counts
 norm_counts = counts(dds, normalized=TRUE)
-write.table(
-    data.frame("gene"=rownames(norm_counts), norm_counts),
-    file=normfile,
-    sep='\t',
-    row.names=FALSE)
+fwrite(data.frame("gene_id"=rownames(norm_counts), norm_counts), file=normfile)
+

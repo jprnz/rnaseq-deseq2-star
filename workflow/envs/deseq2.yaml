@@ -3,6 +3,10 @@ channels:
   - conda-forge
 dependencies:
   - bioconductor-deseq2 =1.34.0
+  - r-ashr =2.2_54
   - r-writexls =6.4.0
   - r-data.table =1.14.2
   - r-ggplot2 =3.3.5
+  - r-pheatmap =1.0.12
+  - r-yaml =2.3.5
+  - perl

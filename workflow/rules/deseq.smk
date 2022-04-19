@@ -1,6 +1,6 @@
+analyses = {v['analysis']: dict(v) for v in config["analyses"]}
 strandedness = [config['strandedness'] for v in samples]
 
-analyses = config['analyses']
 
 rule count_matrix:
     input:
@@ -17,6 +17,7 @@ rule count_matrix:
     script:
         "../scripts/count-matrix.py"
 
+
 rule deseq_dds:
     input:
         counts = deseqdir + "/counts.tsv"
@@ -24,7 +25,7 @@ rule deseq_dds:
         dds = deseqdir + "/dds.rds",
         norm = deseqdir + "/normalized-counts.tsv"
     log:
-        deseqdir + "/logs/deseq-init.log"
+        deseqdir + "/logs/init.log"
     params:
         samples = config["samples"]
     conda:
@@ -33,25 +34,27 @@ rule deseq_dds:
     script:
         "../scripts/deseq-init.R"
 
-rule deseq_results:
+
+rule deseq_analysis:
     input:
-        dds = deseqdir + "/dds.rds"
+        config = "config/analysis.yaml",
+        dds = deseqdir + "/dds.rds",
+        genes = genome_gtf + ".genes"
     output:
-        dds = deseqdir + "/{analysis}/dds.rds",
-        res = deseqdir + "/{analysis}/results.rds",
-        xlsx = deseqdir + "/{analysis}/diffexp.xlsx"
+        dat = deseqdir + "/{analysis}/analysis.RData",
+        xlsx = deseqdir + "/{analysis}/analysis.xlsx"
     log:
-        deseqdir + "/logs/{analysis}-deseq.log"
+        deseqdir + "/logs/{analysis}.log"
     params:
-        model = lambda wc: analyses[wc.analysis]['model'],
-        contrasts = lambda wc: analyses[wc.analysis]['contrasts']
+        analysis = lambda wc: wc.analysis
     conda:
         "../envs/deseq2.yaml"
     threads: 1
     script:
         "../scripts/deseq-analysis.R"
 
+
 rule run_deseq:
     input:
-        expand(deseqdir + "/{analysis}/diffexp.xlsx", analysis=analyses)
+        expand(deseqdir + "/{analysis}/analysis.xlsx", analysis=analyses)
 

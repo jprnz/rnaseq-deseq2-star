@@ -7,8 +7,22 @@ def get_ensembl_fasta(download=False, path=reference_path, log=None, **args):
 
     datatype, species, build, release = itemgetter('datatype', 'species', 'build', 'release')(args)
 
+    # Derived params
+    branch = "grch37/" if release >= 81 and build == "GRCh37" else ""
+    spec = f"{build}" if int(release) > 75 else f"{build}.{release}"
+    species_cap = species.capitalize()
+
+    # Define url
+    url_base = f"ftp://ftp.ensembl.org/pub/{branch}release-{release}/fasta/{species}/{datatype}/{species_cap}.{spec}.{{suffix}}.gz"
+
     if datatype == "dna":
+        # Check if primary_assembly is available
         suffix = "dna.primary_assembly.fa"
+        url_test = url_base.format(suffix=suffix)
+        try:
+            shell("set -x; (curl --head -Ss -L {url_test}) &> {log}")
+        except:
+            suffix = "dna_sm.toplevel.fa"
     elif datatype == "cdna":
         suffix = "cdna.all.fa"
     elif datatype == "cds":
@@ -20,20 +34,19 @@ def get_ensembl_fasta(download=False, path=reference_path, log=None, **args):
     else:
         raise ValueError("invalid datatype, must be one of dna, cdna, cds, ncrna, pep")
 
-    branch = "grch37/" if release >= 81 and build == "GRCh37" else ""
-    spec = f"{build}" if int(release) > 75 else f"{build}.{release}"
-    species_cap = species.capitalize()
+
+    # Define paths
     local_path = f"{path}/{species}/{release}-{build}/{species_cap}.{spec}.{suffix}"
+    url = url_base.format(suffix=suffix)
 
     if download:
-        url = f"ftp://ftp.ensembl.org/pub/{branch}release-{release}/fasta/{species}/{datatype}/{species_cap}.{spec}.{suffix}.gz"
         try:
             shell("set -x; (curl -S -L {url} | zcat > {local_path}) &> {log}")
-        except Exception as e:
+        except:
             raise ValueError(
-                "Unable to download requested sequence data from Ensembl. "
-                "Did you check that this combination of species, build, "
-                "and release is actually provided?")
+                    "Unable to download requested sequence data from Ensembl using urls:\n"
+                    "{url}\nDid you check that this combination of species, build, "
+                    "and release is actually provided?".format(url=url))
     else:
         return local_path
 
@@ -59,14 +72,19 @@ def get_ensembl_gtf(download=False, path=reference_path, log=None, **args):
             shell("set -x; (curl -L {url} | zcat > {local_path}) &> {log}")
         except Exception as e:
             raise ValueError(
-                "Unable to download requested sequence data from Ensembl. "
-                "Did you check that this combination of species, build, "
-                "and release is actually provided?")
+                "Unable to download requested sequence data from Ensembl using url:\n"
+                "{url}\n Did you check that this combination of species, build, "
+                "and release is actually provided?".format(url=url))
     else:
         return local_path
 
+
 genome_fasta = get_ensembl_fasta(datatype="dna", **reference_args)
 genome_gtf = get_ensembl_gtf(**reference_args)
+
+# Regular expression to parse gtf to genes file (gene_id, symbol, biotype)
+gtf_genes_sed = 's/.*gene_id "([^"]+).* gene_name "([^"]+).* gene_biotype "([^"]+).*/\1,\2,\3/'
+
 
 rule download_genome:
     output:
@@ -86,6 +104,18 @@ rule download_annotation:
     cache: True
     run:
         get_ensembl_gtf(download=True, log=log[0], **reference_args)
+
+
+rule make_genes_file:
+    input:
+        genome_gtf
+    output:
+        f"{genome_gtf}.genes"
+    log:
+        reference_path + "/logs/{species}-{release}-{build}-gtf-genes.log".format(**reference_args)
+    cache: True
+    script:
+        "../scripts/gtf_symbols.py"
 
 
 rule genome_faidx:
