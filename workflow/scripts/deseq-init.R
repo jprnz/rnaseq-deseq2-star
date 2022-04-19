@@ -11,55 +11,53 @@ ddsfile <- snakemake@output[["dds"]]
 normfile <- snakemake@output[["norm"]]
 threads <- snakemake@threads
 
+
 library("DESeq2")
 library("data.table")
 
-parallel <- FALSE
-if (threads > 1) {
-    library("BiocParallel")
-    register(MulticoreParam(threads))
-    parallel <- TRUE
-}
 
+get_coldata = function(filename) {
+    ret <- read.table(
+        samplefile,
+        header=TRUE,
+        row.names="sample",
+        check.names=FALSE)
 
-# Load sample data
-coldata <- read.table(
-    samplefile,
-    header=TRUE,
-    row.names="sample",
-    check.names=FALSE)
-
-
-# Use given row-order to determine factor levels
-for (column in colnames(coldata)) {
-    if (is.character(coldata[, column])) {
-        vals = coldata[, column]
-        coldata[, column] <- factor(vals, levels=unique(vals))
+    # Use given row-order to determine factor levels
+    for (col in colnames(ret)) {
+        if (is.character(ret[, col])) {
+            vals = ret[, col]
+            ret[, col] <- factor(vals, levels=unique(vals))
+        }
     }
+    return(ret)
 }
-str(coldata)
+
 
 # Counts columns will be reordered to match sample data
+coldat = get_coldata(samplefile)
+
+# Get count data
 cts <- read.table(
     countsfile,
     header=TRUE,
     row.names="gene_id",
     check.names=FALSE)
-cts <- cts[, rownames(coldata)]
+cts <- cts[, rownames(coldat)]
 
 # Create DDS object
 dds <- DESeqDataSetFromMatrix(
     countData=cts,
-    colData=coldata,
+    colData=coldat,
     design= ~ 1)
 
 
 # Remove uninformative genes
-dds <- dds[ rowSums(counts(dds)) >= 10, ]
+dds <- dds[rowSums(counts(dds)) >= 10, ]
 
 
 # Normalization and preprocessing
-dds <- DESeq(dds, parallel=parallel)
+dds <- DESeq(dds)
 
 
 # Write dds object as RDS

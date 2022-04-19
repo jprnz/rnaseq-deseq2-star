@@ -42,7 +42,7 @@ rule deseq_analysis:
         genes = genome_gtf + ".genes"
     output:
         dat = deseqdir + "/{analysis}/analysis.RData",
-        xlsx = deseqdir + "/{analysis}/analysis.xlsx"
+        xls = deseqdir + "/{analysis}/analysis.xlsx"
     log:
         deseqdir + "/logs/{analysis}.log"
     params:
