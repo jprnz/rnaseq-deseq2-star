@@ -1,3 +1,5 @@
+import glob
+
 analyses = {v['analysis']: dict(v) for v in config["analyses"]}
 strandedness = [config['strandedness'] for v in samples]
 
@@ -25,14 +27,30 @@ rule deseq_dds:
         dds = deseqdir + "/dds.rds",
         norm = deseqdir + "/normalized-counts.tsv"
     log:
-        deseqdir + "/logs/init.log"
+        deseqdir + "/logs/dds.log"
     params:
         samples = config["samples"]
     conda:
         "../envs/deseq2.yaml"
-    threads: 1
+    resources:
+        mem_mb = 8000
     script:
         "../scripts/deseq-init.R"
+
+
+rule deseq_pca:
+    input:
+        dds = deseqdir + "/dds.rds",
+    output:
+        deseqdir + "/PCA.pdf"
+    log:
+        deseqdir + "/logs/init.log"
+    params:
+        color_by = "condition"
+    conda:
+        "../envs/deseq2.yaml"
+    script:
+        "../scripts/deseq-pca.R"
 
 
 rule deseq_analysis:
@@ -49,12 +67,14 @@ rule deseq_analysis:
         analysis = lambda wc: wc.analysis
     conda:
         "../envs/deseq2.yaml"
-    threads: 1
+    resources:
+        mem_mb = 8000
     script:
         "../scripts/deseq-analysis.R"
 
 
 rule run_deseq:
     input:
+        deseqdir + "/PCA.pdf",
         expand(deseqdir + "/{analysis}/analysis.xlsx", analysis=analyses)
 

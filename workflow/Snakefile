@@ -14,6 +14,7 @@ min_version("7.2.1")
 # Read in config
 configfile: "config/config.yaml"
 configfile: "config/analysis.yaml"
+configfile: "config/gsea.yaml"
 
 # When using --use-conda --use-singularity, this sets the OS used
 container: "docker://continuumio/miniconda3"
@@ -54,6 +55,7 @@ stardir    = f"{datadir}/d02_star"
 rseqcdir   = f"{datadir}/d03_rseqc"
 multiqcdir = f"{datadir}/d04_multiqc"
 deseqdir   = f"{datadir}/d05_deseq"
+gseadir    = f"{datadir}/d06_gsea"
 
 
 # Set constraints for wildcards
@@ -69,11 +71,12 @@ include: "rules/star.smk"
 include: "rules/rseqc.smk"
 include: "rules/multiqc.smk"
 include: "rules/deseq.smk"
+include: "rules/gsea.smk"
 
 
 # Main target
-#rule all:
-#    input:
-#        get_final_output(),
-#        "results/qc/multiqc_report.html",
-#        "results/pca.svg",
+rule all:
+    input:
+        rules.run_gsea.input,
+        rules.run_deseq.input,
+        rules.run_multiqc.input

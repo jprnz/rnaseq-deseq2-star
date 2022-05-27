@@ -1,0 +1,24 @@
+
+gsea_set_names:
+  Positional: c1
+  Pathways: c2
+  Regulatory: c3
+  OncogenicPredicted: c4
+  GeneOntologies: c5
+  OncogenicPathways: c6
+  Immunologic: c7
+  CellMarkers: c8
+  Hallmark: h
+
+gsea_set_paths:
+  c1: resources/msigdb_v7.5.1_GMTs/c1.all.v7.5.1.symbols.gmt
+  c2: resources/msigdb_v7.5.1_GMTs/c2.all.v7.5.1.symbols.gmt
+  c3: resources/msigdb_v7.5.1_GMTs/c3.all.v7.5.1.symbols.gmt
+  c4: resources/msigdb_v7.5.1_GMTs/c4.all.v7.5.1.symbols.gmt
+  c5: resources/msigdb_v7.5.1_GMTs/c5.all.v7.5.1.symbols.gmt
+  c6: resources/msigdb_v7.5.1_GMTs/c6.all.v7.5.1.symbols.gmt
+  c7: resources/msigdb_v7.5.1_GMTs/c7.all.v7.5.1.symbols.gmt
+  c8: resources/msigdb_v7.5.1_GMTs/c8.all.v7.5.1.symbols.gmt
+  h:  resources/msigdb_v7.5.1_GMTs/h.all.v7.5.1.symbols.gmt
+
+gsea_set_descriptions: resources/msigdb_v7.5.1.csv

@@ -118,6 +118,8 @@ rule rseqc_read_distribution:
         prefix = rseqcdir + "/{sample}/{sample}"
     conda:
         "../envs/rseqc.yaml"
+    resources:
+        mem_mb = 32000
     shell:
         "(set -x; read_distribution.py "
         "-i {input.bam} "
@@ -165,8 +167,7 @@ rule rseqc_gene_body_coverage:
         bam = stardir + "/{sample}.bam",
         bed = rseqcdir + "/annotation.bed"
     output:
-        rseqcdir + "/{sample}/{sample}.geneBodyCoverage.txt"
-    log:
+        rseqcdir + "/{sample}/{sample}.geneBodyCoverage.txt",
         rseqcdir + "/logs/genebody_coverage/{sample}.log",
     params:
         extra=r"-q 255",
@@ -180,7 +181,7 @@ rule rseqc_gene_body_coverage:
         "-i {input.bam} "
         "-r {input.bed} "
         "-o {params.prefix} "
-        ") &> {log}"
+        ") &> {log} && rm log.txt"
 
 
 rule run_rseqc:

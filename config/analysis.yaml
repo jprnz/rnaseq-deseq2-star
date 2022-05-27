@@ -1,7 +1,6 @@
 analyses:
-  - analysis: A-vs-B
+  - analysis: Mu-vs-WT
     model: ~ condition
     contrasts:
-        - ["condidion", "A", "B"]
-        - ["condition", "C", "C"]
+        - ["condition", "all"]
 

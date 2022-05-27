@@ -1,7 +1,9 @@
 sample	pair	path
-A	R1	data/A_R1.fastq.gz
-A	R1	data/A_R1.fastq.gz
-A	R2	data/A_R2.fastq.gz
-A	R2	data/A_R2.fastq.gz
-B	R1	data/B_R1.fastq.gz
-B	R2	data/B_R2.fastq.gz
+A	R1	data/a.chr21.1.fq.gz
+A	R2	data/a.chr21.2.fq.gz
+B	R1	data/b.chr21.1.fq.gz
+B	R2	data/b.chr21.2.fq.gz
+C	R1	data/a.chr21.1.fq.gz
+C	R2	data/a.chr21.2.fq.gz
+C	R1	data/b.chr21.1.fq.gz
+C	R2	data/b.chr21.2.fq.gz

@@ -143,7 +143,7 @@ rule star_index_genome:
     conda:
         "../envs/star.yaml"
     resources:
-        mem_mb = 32000
+        mem_mb = 48000
     cache: True
     threads: 16
     shell:

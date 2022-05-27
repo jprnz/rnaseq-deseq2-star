@@ -2,7 +2,6 @@ log <- file(snakemake@log[[1]], open="wt")
 sink(log)
 sink(log, type="message")
 
-
 threads <- snakemake@threads
 genesfile <- snakemake@input[['genes']]
 ddsfile <- snakemake@input[['dds']]
@@ -45,7 +44,11 @@ get_sample_counts = function(ctr, dat, count) {
     col = ctr[1]
     for (lvl in ctr[2:3]) {
         ids = rownames(dat)[dat[, col] == lvl]
-        ret_list[[lvl]] = rowMeans(count[, ids])
+        if (length(ids) > 1) {
+            ret_list[[lvl]] = rowMeans(count[, ids])
+        } else {
+            ret_list[[lvl]] = count[, ids]
+        }
     }
     ret = do.call(data.frame, ret_list)
     names(ret) = paste0(names(ret_list), "_mean")
@@ -73,17 +76,16 @@ format_tab = function(res, ctr, dds, genes) {
     return(ret)
 }
 
-format_rnk = function(res) {
-    if ("stat" %in% names(res)) {
+format_rnk = function(tab) {
+    if ("stat" %in% names(tab)) {
         col = "stat"
     } else {
         col = "log2FoldChange"
     }
-
-    keep = which(!is.na(res$pvalue))
-    ret = data.table(gene_id=rownames(res), stat=res[, col])
-    ret = ret[keep,]
-    setorder(ret, stat)
+    keep = which(!is.na(tab$pvalue))
+    ret = tab[keep, c("symbol", col), with=FALSE]
+    ret[, symbol := toupper(symbol)]
+    setorderv(ret, col)
     return(ret)
 }
 
@@ -93,7 +95,7 @@ plot_heatmap = function(res, ctr, dds, filename, n=100) {
     dat = as.data.frame(colData(dds))[, ctr[1], drop=FALSE]
     res = as.data.frame(res)
     setorder(res, pvalue)
-    ids = rownames(res)[1:n]
+    ids = na.omit(rownames(res)[1:n])
 
     # Z-score rlog counts
     mat = assay(rlog(dds))[ids,]
@@ -158,8 +160,6 @@ for (cfg in config) {
 # Load genes file
 genes = fread(genesfile)
 
-save.image()
-
 # Get model and contrast
 model = as.formula(cfg$model)
 contrs = get_contrasts(cfg$contrasts, dds)
@@ -187,7 +187,7 @@ tab = list()
 rnk = list()
 for (ctr in names(contrs)) {
     tab[[ctr]] = format_tab(res[[ctr]], contrs[[ctr]], dds, genes)
-    rnk[[ctr]] = format_rnk(res[[ctr]])
+    rnk[[ctr]] = format_rnk(tab[[ctr]])
 }
 
 # Write results
