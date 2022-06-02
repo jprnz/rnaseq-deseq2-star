@@ -18,7 +18,7 @@ library("parallel")
 # Header for xlsx
 header = c(
   "gene_set"="MSigDB gene-set (for more information on gene-sets, visit: https://www.gsea-msigdb.org/gsea/msigdb/search.jsp)",
-  "description"="Breif description of gene-set",
+  "description"="Brief description of gene-set",
   "pval"="Enrichment p-value",
   "padj"="Adjusted p-value (Benjamini and Hochberg, 1995)",
   "log2err"="Expected error for the standard deviation of the p-value logarithm",
@@ -61,6 +61,7 @@ write_excel <- function(gsea, desc, header, filename) {
 }
 
 plot_nes = function(gsea, filename, ntop=10) {
+  gsea = gsea[order(abs(NES), decreasing=TRUE),]
   dat = gsea[NES > 0, ][1:ntop,]
   dat = rbind(dat, gsea[NES < 0,][1:ntop,])
   dat = na.omit(dat, "pathway")

@@ -55,4 +55,4 @@ matrix = pd.concat(counts, axis=1)
 matrix.index.name = "gene_id"
 
 # Write
-matrix.to_csv(snakemake.output[0], sep="\t")
+matrix.to_csv(snakemake.output[0])

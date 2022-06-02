@@ -13,6 +13,7 @@ title: "RNA-Seq Workflow"
 extra_fn_clean_exts:
   - _R1
   - _R2
+  - .readdistribution
 
 # Overrides of expected search path
 sp:

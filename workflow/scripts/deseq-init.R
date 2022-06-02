@@ -40,6 +40,7 @@ coldat = get_coldata(samplefile)
 # Get count data
 cts <- read.table(
     countsfile,
+    sep=",",
     header=TRUE,
     row.names="gene_id",
     check.names=FALSE)

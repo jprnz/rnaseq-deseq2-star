@@ -135,10 +135,12 @@ rule rseqc_read_duplication:
     log:
         rseqcdir + "/logs/read_duplication/{sample}.log",
     params:
-        extra=r"-q 255",
+        extra = r"-q 255",
         prefix = rseqcdir + "/{sample}/{sample}"
     conda:
         "../envs/rseqc.yaml"
+    resources:
+        mem_mb = 16000
     shell:
         "(set -x; read_duplication.py "
         "-i {input} "
@@ -169,6 +171,8 @@ rule rseqc_gene_body_coverage:
     output:
         rseqcdir + "/{sample}/{sample}.geneBodyCoverage.txt",
         rseqcdir + "/logs/genebody_coverage/{sample}.log",
+    log:
+        rseqcdir + "/logs/gene_body_coverage/{sample}.log",
     params:
         extra=r"-q 255",
         prefix = rseqcdir + "/{sample}/{sample}"
@@ -181,7 +185,7 @@ rule rseqc_gene_body_coverage:
         "-i {input.bam} "
         "-r {input.bed} "
         "-o {params.prefix} "
-        ") &> {log} && rm log.txt"
+        "&& rm log.txt) &> {log}"
 
 
 rule run_rseqc:
@@ -189,6 +193,6 @@ rule run_rseqc:
         expand(rseqcdir + "/{sample}/{sample}.junctionSaturation_plot.pdf", sample=samples),
         expand(rseqcdir + "/{sample}/{sample}.stats.txt", sample=samples),
         expand(rseqcdir + "/{sample}/{sample}.readdistribution.txt", sample=samples),
-        expand(rseqcdir + "/{sample}/{sample}.pos.DupRate.xls", sample=samples),
-        expand(rseqcdir + "/{sample}/{sample}.geneBodyCoverage.txt", sample=samples)
+        #expand(rseqcdir + "/{sample}/{sample}.pos.DupRate.xls", sample=samples),
+        #expand(rseqcdir + "/{sample}/{sample}.geneBodyCoverage.txt", sample=samples)
 

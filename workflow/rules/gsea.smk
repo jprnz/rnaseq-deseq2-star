@@ -19,6 +19,7 @@ checkpoint rule gsea:
         gmt = get_gsea_gmtfile,
         desc = gsea_set_descriptions,
         rnks = get_gsea_rnkfiles,
+        xls = deseqdir + "/{analysis}/analysis.xlsx"
     output:
         xls = gseadir + "/{analysis}/{analysis}-{pathway}.xlsx"
     log:

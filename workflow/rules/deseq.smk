@@ -1,5 +1,3 @@
-import glob
-
 analyses = {v['analysis']: dict(v) for v in config["analyses"]}
 strandedness = [config['strandedness'] for v in samples]
 
@@ -8,7 +6,7 @@ rule count_matrix:
     input:
         expand(stardir + "/{sample}/{sample}_ReadsPerGene.out.tab", sample=samples)
     output:
-        deseqdir + "/counts.tsv",
+        deseqdir + "/counts.csv",
     log:
         deseqdir + "/logs/count-matrix.log"
     params:
@@ -22,10 +20,10 @@ rule count_matrix:
 
 rule deseq_dds:
     input:
-        counts = deseqdir + "/counts.tsv"
+        counts = deseqdir + "/counts.csv"
     output:
         dds = deseqdir + "/dds.rds",
-        norm = deseqdir + "/normalized-counts.tsv"
+        norm = deseqdir + "/normalized-counts.csv"
     log:
         deseqdir + "/logs/dds.log"
     params:

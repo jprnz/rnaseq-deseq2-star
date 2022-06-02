@@ -16,7 +16,7 @@ rule multiqc:
         output_name = "QC.html",
         config = "config/multiqc.yaml"
     shell:
-        "(set -x; multiqc "
+        "(set -x; multiqc -f "
         "-o {params.output_path} "
         "-n {params.output_name} "
         "-c {params.config} "
