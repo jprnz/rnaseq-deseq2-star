@@ -1,25 +1,25 @@
-# Differential Expression using STAR / DESeq2
-![DAG](resources/dag.svg)
+# RNA-Seq Workflow
+<div align="center">
+    <img src="resources/dag.svg" width="40%" height="40%">
+</div>
 
+# Differential Expression using STAR / DESeq2
 This workflow is designed to perform simple case-control analysis of one or more variables using DESeq.
 The workflow leverages ties together the following pieces of software:
-
-[fastp](https://github.com/OpenGene/fastp)
-[STAR](https://github.com/alexdobin/STAR)
-[RSeQC](http://rseqc.sourceforge.net/)
-[MultiQC](https://multiqc.info/)
-[DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
+* [fastp](https://github.com/OpenGene/fastp)
+* [STAR](https://github.com/alexdobin/STAR)
+* [RSeQC](http://rseqc.sourceforge.net/)
+* [MultiQC](https://multiqc.info/)
+* [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
 
 All software dependencies are automatically resolved using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/index.html).
-Local execution and running via [SLURM](https://slurm.schedmd.com/) are supported.
-
+Local execution and running via [SLURM](https://slurm.schedmd.com/) are supported.  
 When running from an HPC all work should be done on an interactive session.
 
 ## Setup
 ### Code
-From GitLab, fork this project filling out the project name, description, and ensure under namespace "SGT-Projects" is selected.
-
-Clone workflow into project directory
+From GitLab, fork this project filling out the project name, description, and ensure under namespace "SGT-Projects" is selected.  
+Then, clone this repository into your project directory
 ```
 git clone <url>
 ```
@@ -57,9 +57,8 @@ To run the example data using SLURM, from the `test/` directory, run
 ```
 
 ## Running
-Setup the correct genome and ensure the settings in `config/config.yaml` are correct. 
-Prepare the workflow configuration files `fastqs.tsv`, `samples.tsv`, `analysis.yaml`.
-See documentation [here](congig/README.md) for more information.
+Setup the correct genome and ensure the settings in `config/config.yaml` are correct, then prepare the workflow configuration files `fastqs.tsv`, `samples.tsv`, `analysis.yaml`.    
+See documentation [here](config/README.md) for more information.  
 
 It is often useful to see what Snakemake is planning on doing without running anything
 ```
@@ -70,9 +69,9 @@ To run the workflow locally one could use
 ```
 snakemake --use-conda -j<threads>
 ```
-
-This will instruct Snakemake to resolve dependencies using  conda and up to <threads> number of parallel tasks (or up to 16 threads per-task)
-When running on SLURM use the helper script `snakemake_slurm.sh`.
+This will instruct Snakemake to resolve dependencies using conda and up to `<threads>` number of parallel tasks (or number of threads per-task).  
+When running on SLURM use the helper script `snakemake_slurm.sh`.  
 See Snakemake documentation for more [command line options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#all-options).
-Once an analysis is complete, ensure all your changes are commited and pushed to your project's repository.
 
+
+Once an analysis is complete, ensure all your changes are commited and pushed to your project's repository.
