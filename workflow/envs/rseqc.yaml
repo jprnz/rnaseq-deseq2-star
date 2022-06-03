@@ -1,3 +1,4 @@
+name: rseqc
 channels:
   - conda-forge
   - bioconda

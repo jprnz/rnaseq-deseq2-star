@@ -1,0 +1,6 @@
+analyses:
+  - analysis: Mu-vs-WT
+    model: ~ condition
+    contrasts:
+        - ["condition", "all"]
+

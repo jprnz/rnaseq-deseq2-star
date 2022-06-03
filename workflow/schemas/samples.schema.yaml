@@ -1,14 +1,20 @@
-$schema: "http://json-schema.org/draft-06/schema#"
+$schema: "http://json-schema.org/draft-07/schema#"
 
-description: an entry in the sample sheet
+description: an entry in the sample sheet (one line per file)
 properties:
-  sample_name:
+  sample:
     type: string
+    pattern: "[^ ?|\/\\]+"
     description: sample name/identifier
-  condition:
+  pair:
+    type: string 
+    pattern: "R?[12]"
+    description: read-pair of file
+  path:
     type: string
-    description: sample condition that will be compared during differential expression analysis (e.g. a treatment, a tissue time, a disease)
+    description: path to file
 
 required:
-  - sample_name
-  - condition
+  - sample
+  - pair
+  - path

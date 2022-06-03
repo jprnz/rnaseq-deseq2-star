@@ -1,0 +1,5 @@
+sample	pair	path
+WT-1	R1	/path/to/WT-1_R1.fastq.gz
+WT-1	R2	/path/to/WT-1_R2.fastq.gz
+Mu-1	R1	/path/to/Mu-1_R1.fastq.gz
+Mu-1	R2	/path/to/Mu-1_R2.fastq.gz

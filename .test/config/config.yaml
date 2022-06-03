@@ -1,41 +1,32 @@
-# path or URL to sample sheet (TSV format, columns: sample, condition, ...)
-samples: config/samples.tsv
-# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
-# Units are technical replicates (e.g. lanes, or resequencing of the same biological
-# sample).
-units: config/units.tsv
-
-
-ref:
+# Define reference to use
+reference_args:
   # Ensembl species name
-  species: saccharomyces_cerevisiae
-  # Ensembl release
-  release: 100
+  species: homo_sapiens
+
+  # Ensembl release 
+  release: 106
+
   # Genome build
-  build: R64-1-1
+  build: GRCh38
 
+# Where to store reference files 
+reference_path: "../../ensembl-reference"
 
-trimming:
-  activate: False
+# Set stradedness, options:
+#   none: unstranded
+#   yes: first read strand aligned 
+#   reverse: second read strand aligned (common for Illumina TruSeq)
+strandedness: reverse
 
-mergeReads:
-  activate: False
+# Path to tsv describing fastq files (ie, sample, pair, path)
+fastqs: config/fastqs.tsv
 
-pca:
-  activate: True
-  labels:
-    # columns of sample sheet to use for PCA
-    - condition
+# Path to table describing analysis conditions
+samples: config/samples.tsv
 
-diffexp:
-  # contrasts for the deseq2 results method
-  contrasts:
-    treated-vs-untreated:
-      - treated
-      - untreated
-  model: ~condition
+# Path to file describing models for analysis
+analysis: config/analysis.yaml 
 
-params:
-  cutadapt-pe: ""
-  cutadapt-se: ""
-  star: ""
+# Output path
+datadir: "processed"
+
