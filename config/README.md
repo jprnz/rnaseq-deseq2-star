@@ -1,16 +1,12 @@
 # General settings
-To configure this workflow, modify ``config/config.yaml`` according to your needs, following the explanations provided in the file.
+To configure this workflow, modify `config/config.yaml` according to your needs paying special attention to the refrence genome, output folders, and strandedness options. 
 
-# Sample and unit sheet
+# Samples for preprocessing
+FASTQ files should be listed in `fastqs.tsv` file. For each sample, the columns `sample`, `pair`, and `path` must be defined. `sample` indicates a unique unit that will be processed, `pair` indicates the sequence pair of the FASTQ file, and `path` should describe the location of the FASTQ file (as an absolute path or relative to the project directory). Multiple values for the same `sample` and `pair` will merged together before processing (useful when a sample is sequenced across lanes or if FASTQ files are split into separate parts).     
 
-* Add samples to `config/samples.tsv`. For each sample, the columns `sample_name`, and `condition` have to be defined. The `condition` (healthy/tumor, before Treatment / after Treatment) will be used as contrast for the DEG analysis in DESeq2. To include other relevant variables such as batches, add a new column to the sheet.
-* For each sample, add one or more sequencing units (runs, lanes or replicates) to the unit sheet `config/units.tsv`. By activating or deactivating `mergeReads` in the `config/config.yaml`, you can decide wether to merge replicates or run them individually. For each unit, define adapters, and either one (column `fq1`) or two (columns `fq1`, `fq2`) FASTQ files (these can point to anywhere in your system). Alternatively, you can define an SRA (sequence read archive) accession (starting with e.g. ERR or SRR) by using a column `sra`. In the latter case, the pipeline will automatically download the corresponding paired end reads from SRA. If both local files and SRA accession are available, the local files will be preferred.
-To choose the correct geneCounts produced by STAR, you can define the strandedness of a unit. STAR produces counts for unstranded ('None' - default), forward oriented ('yes') and reverse oriented ('reverse') protocols.  
+# Differential expression
+Each analysis that will be performed is defined in `analysis.yaml`. Here, `analyses` is a list that can contain any number of models to analyse. Values for `model` are used specify the design for DESeq, and `contrasts` indicate which conditions to include in the analysis. A special condition `all` may be used to facilitate the analysis of every pairwise comparison for the condition of interest. See the DESeq2 [manual](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) for more information about setting up a design and using contrasts.
 
-Missing values can be specified by empty columns or by writing `NA`.
+In addition to `samples`, every variable in your model will need to have a corresponding column in `samples.tsv`.
 
-# DESeq scenario
-
-To initialize the DEG analysis, you need to define a model in the `config/config.yaml`. The model can include all variables introduced as columns in `config/samples.tsv`.
-* The standard model is `~condition` - to include a batch variable, write `~batch + condition`.
-
+An example set of configuration files can be found in the `.test/config` directory.
