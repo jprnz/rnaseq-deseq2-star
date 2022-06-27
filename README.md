@@ -21,7 +21,7 @@ When running from an HPC all work should be done on an interactive session.
 From GitLab, fork this project filling out the project name, description, and ensure under namespace "SGT-Projects" is selected.  
 Then, clone this repository into your project directory
 ```
-git clone <url>
+git clone git@gitlab.oit.duke.edu:sgt-workflows/rnaseq-deseq2-star.git
 ```
 
 Checkout new analysis branch and push this to your project repository
@@ -51,7 +51,7 @@ mamba env create -f snakemake.yaml
 conda activate snakemake
 ```
 
-To run the example data using SLURM, from the `test/` directory, run
+To run the example data using SLURM, from the `.test/` directory, run
 ```
 .././snakemake_slurm.sh -s ../workflow/Snakefile --use-conda -j500
 ```
