@@ -35,14 +35,13 @@ Change your default branch to `analysis` in GitLab via setting -> repository -> 
 ### Conda
 Install conda to `conda/` directory
 ```
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -p conda -b
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -p conda -b
 ```
 
-Activate the base environment and install mamba (a faster conda frontend)
+Activate the base environment
 ```
 source conda/bin/activate
-conda install mamba -c conda-forge
 ```
 
 Install Snakemake and activate environment
