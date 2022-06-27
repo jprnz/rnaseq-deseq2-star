@@ -21,7 +21,7 @@ When running from an HPC all work should be done on an interactive session.
 From GitLab, fork this project filling out the project name, description, and ensure under namespace "SGT-Projects" is selected.  
 Then, clone this repository into your project directory
 ```
-git clone git@gitlab.oit.duke.edu:sgt-workflows/rnaseq-deseq2-star.git
+git clone <url>
 ```
 
 Checkout new analysis branch and push this to your project repository
