@@ -64,12 +64,12 @@ It is often useful to see what Snakemake is planning on doing without running an
 snakemake -n
 ```
 
-To run the workflow locally one could use
+To run the workflow on SLURM one could use
 ```
-snakemake --use-conda -j<threads>
+./snakemake_slurm.sh --use-conda -j<threads>
 ```
 This will instruct Snakemake to resolve dependencies using conda and up to `<threads>` number of parallel tasks (or number of threads per-task).  
-When running on SLURM use the helper script `snakemake_slurm.sh`.  
+When running locally use `snakemake`.  
 See Snakemake documentation for more [command line options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#all-options).
 
 
