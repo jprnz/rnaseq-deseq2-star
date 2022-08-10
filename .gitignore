@@ -14,6 +14,7 @@
 !workflow/rules/*
 !workflow/schemas/*
 !workflow/scripts/*
+!workflow/scripts/R/*
 !.test
 !.test/data
 !.test/data/*
