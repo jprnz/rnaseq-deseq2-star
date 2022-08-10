@@ -2,9 +2,11 @@
 analyses = {v['analysis']: dict(v) for v in config["analyses"]}
 
 # Determine strandedness
-strandedness_file = "config/strandedness.tsv"
-if os.path.exists(strandedness_file):
-    strand = pd.read_csv(strandedness_file, index_col="sample", sep="\t", dtype='object')
+strand_val = config['strandedness']
+if strand_val in ['none', 'yes', 'reverse']:
+    strandedness = [strand_val for v in samples]
+elif os.path.exists(strandedness_file):
+    strand = pd.read_csv(strand_val, index_col="sample", sep="\t", dtype='object')
     try:
         strandedness = [strand.loc[v]['strandedness'] for v in samples]
     except:
@@ -12,7 +14,8 @@ if os.path.exists(strandedness_file):
             f"Check to make sure \'{strandedness_file}\' is formatted "
             "correctly and all samples are acounted for")
 else:
-    strandedness = [config['strandedness'] for v in samples]
+    raise ValueError(
+        "Check to make sure \'strandedness\' is formatted correctly in config.yaml")
 
 
 rule count_matrix:
