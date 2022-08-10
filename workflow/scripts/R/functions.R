@@ -239,6 +239,7 @@ plot_pca = function(
     pca_x <- data.table(pca$x, keep.rownames=TRUE)
     dat <- data.table(dat, keep.rownames=TRUE)
     plt <- merge(pca_x, dat)
+    browser()
 
     # Get percent variance
     pctvar <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)))
@@ -253,7 +254,7 @@ plot_pca = function(
 
     if (samples) {
         ret <- ret + geom_text_repel(
-            aes(label=.data$sample),
+            aes(label=.data$rn),
             box.padding=0.5,
             min.segment.length=0,
             show.legend=FALSE)
