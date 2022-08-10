@@ -16,13 +16,12 @@ reference_path: "../ensembl-reference"
 #   none: unstranded
 #   yes: first read strand aligned 
 #   reverse: second read strand aligned (common for Illumina TruSeq)
+#   path: path to file containing strand value (any of the above) for each sample.
+
 strandedness: reverse
 
 # Path to tsv describing fastq files (ie, sample, pair, path)
 fastqs: config/fastqs.tsv
-
-# Path to table describing analysis conditions
-samples: config/samples.tsv
 
 # Path to file describing models for analysis
 analysis: config/analysis.yaml 

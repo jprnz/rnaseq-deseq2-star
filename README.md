@@ -35,13 +35,18 @@ Change your default branch to `analysis` in GitLab via setting -> repository -> 
 ### Conda
 Install conda to `conda/` directory
 ```
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-bash Miniforge3-Linux-x86_64.sh -p conda -b
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -p conda
 ```
 
 Activate the base environment
 ```
 source conda/bin/activate
+```
+
+Install mamba package manager
+```
+conda install mamba -c conda-forge
 ```
 
 Install Snakemake and activate environment
@@ -52,6 +57,7 @@ conda activate snakemake
 
 To run the example data using SLURM, from the `.test/` directory, run
 ```
+cd .test
 .././snakemake_slurm.sh -s ../workflow/Snakefile --use-conda -j500
 ```
 
@@ -68,6 +74,7 @@ To run the workflow on SLURM one could use
 ```
 ./snakemake_slurm.sh --use-conda -j<threads>
 ```
+
 This will instruct Snakemake to resolve dependencies using conda and up to `<threads>` number of parallel tasks (or number of threads per-task).  
 When running locally use `snakemake`.  
 See Snakemake documentation for more [command line options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#all-options).

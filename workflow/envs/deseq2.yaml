@@ -11,4 +11,5 @@ dependencies:
   - r-pheatmap =1.0.12
   - r-writexls =6.4.0
   - r-yaml =2.3.5
+  - radian
   - perl

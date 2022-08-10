@@ -115,7 +115,7 @@ rule make_genes_file:
         reference_path + "/logs/{species}-{release}-{build}-gtf-genes.log".format(**reference_args)
     cache: True
     script:
-        "../scripts/gtf_symbols.py"
+        "../scripts/gene-annotations.py"
 
 
 rule genome_faidx:

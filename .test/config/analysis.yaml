@@ -1,6 +1,27 @@
 analyses:
-  - analysis: Mu-vs-WT
-    model: ~ condition
-    contrasts:
+  - analysis: first-analysis
+    samples: config/first-samples.tsv
+    design: ~ condition
+    results:
+      contrasts:
+          - ["condition", "all"]
+          - ["condition", "treated", "untreated"]
+      names:
+          - ["Intercept", "Intercept"]
+          - ["Comparison", "condition_untreated_vs_treated"]
+      cooksCutoff: false
+      independentFiltering: false
+    pca:
+      pcs: [PC1, PC2]
+      color_by: condition
+
+  - analysis: second-analysis
+    samples: config/second-samples.tsv
+    design: ~ 0 + condition
+    pca:
+      pcs: [PC1, PC2]
+      color_by: condition
+    results:
+      contrasts:
         - ["condition", "all"]
 

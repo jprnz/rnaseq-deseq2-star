@@ -1,6 +1,41 @@
+# List of definitions of analyses to be perfomed
+#
+# For each analysis, the following options are required:
+#   analysis: name of analysis
+#   samples: location of sample-sheet containing samples and variables used the analysis
+#   design: model design (see DESeq documentation for more details)
+#   results: these are options to be passed to the results() function, needs at least one of:
+#     name: a list of two stings, an arbitrary name for the comparison and the coefficient to test
+#     contrast: list of contrasts to test, the following configurations are valid:
+#       1. a list containing a variable and two conditions to test
+#       2. a list containing a variable and "all" to do all pair-wise comparisons of this variable.
+#       3. a list containing three values: an arbitrary name for the comparison followed by two elements from resultsNames()
+#
+#       The first two utilize the first formulation of 'contrast' given in the documentation of results()
+#       The last, used the second formulation given in the documentation
+#
+#
+# Optional arguments:
+#   deseq: these are options passed to the DESeq() function
+#   pca: included if a PCA plot is wanted, further options
+#     pcs: list of PCs to plot ("PC1", "PC2", etc)
+#     color_by: variable to color points by
+#     shape_by: variable to determine point shape
+#
+# Notes:
+#  For LRT, use 'name' determine which coefficient use for LogFC 
+#  output of resultsNames() is printed in the log file for the analysis
+#  Multiple combinations of 'contrast' and 'names' can be specified for the same analysis
+#  Multiple analyses can be defined within this document
+
 analyses:
-  - analysis: Mu-vs-WT
-    model: ~ condition
-    contrasts:
-        - ["condition", "all"]
+  - analysis: first-analysis
+    samples: config/samples.tsv
+    design: ~ condition
+    results:
+      contrasts:
+          - ["condition", "all"]
+    pca:
+      pcs: [PC1, PC2]
+      color_by: condition
 
