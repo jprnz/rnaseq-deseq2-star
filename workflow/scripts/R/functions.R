@@ -14,7 +14,6 @@ read_config <- function(filename, analysis_name) {
 
     # Consistancy check
     if (is.null(ret$results$names) & is.null(ret$results$contrasts)) {
-        browser()
         stop("At least one value for 'names' or 'contrasts' must be specified under 'results'\n")
     }
     return(ret)
