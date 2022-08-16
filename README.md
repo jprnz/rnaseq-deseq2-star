@@ -41,12 +41,12 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p conda
 
 Activate the base environment
 ```
-source conda/bin/activate
+source conda/bin/activate base
 ```
 
 Install mamba package manager
 ```
-conda install mamba -c conda-forge
+conda install mamba -c conda-forge -y
 ```
 
 Install Snakemake and activate environment
