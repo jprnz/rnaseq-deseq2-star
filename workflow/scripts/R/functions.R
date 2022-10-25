@@ -255,7 +255,9 @@ plot_pca = function(
         ret <- ret + geom_text_repel(
             aes(label=.data$rn),
             box.padding=0.5,
+            label.padding=0.5,
             min.segment.length=0,
+            max.overlaps=20,
             show.legend=FALSE)
     }
 
@@ -270,7 +272,7 @@ plot_pca = function(
 
 plot_heatmap = function(res, dds, filename, n=100) {
     # Subset ids to use (top 100, ranked by pvalue)
-    dat = as.data.frame(colData(dds))[, "condition", drop=FALSE]
+    dat = as.data.frame(colData(dds))[, all.vars(design(dds)), drop=FALSE]
     res = na.omit(as.data.frame(res))
     res = res[order(abs(res$log2FoldChange), decreasing=TRUE, na.last=TRUE),]
     ids = na.omit(rownames(res)[1:100])
