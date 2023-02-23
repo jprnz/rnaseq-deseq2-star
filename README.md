@@ -46,7 +46,7 @@ source conda/bin/activate base
 
 Install mamba package manager
 ```
-conda install mamba -c conda-forge -y
+conda install mamba conda -y
 ```
 
 Install Snakemake and activate environment
