@@ -35,8 +35,8 @@ Change your default branch to `analysis` in GitLab via setting -> repository -> 
 ### Conda
 Install conda to `conda/` directory
 ```
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p conda
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -p conda -b
 ```
 
 Activate the base environment
