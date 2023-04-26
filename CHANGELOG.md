@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-04-26
+* Sort DESeq results by p-value
+* Truncate long names in GSEA enrichment plots 
+
 ## 2022-08-10
 * Re-work of analysis.yaml and sample-sheet definitions (see [here](config/README.md) for more information)
 * Set ranking of results tables / heatmaps to use shrunken LFC (as recommended in the DESeq2 documentation)

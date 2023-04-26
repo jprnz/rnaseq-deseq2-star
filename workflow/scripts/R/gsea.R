@@ -16,6 +16,7 @@ library("WriteXLS")
 library("RColorBrewer")
 library("parallel")
 
+
 # Header for xlsx
 header = c(
   "gene_set"="MSigDB gene-set (for more information on gene-sets, visit: https://www.gsea-msigdb.org/gsea/msigdb/search.jsp)",
@@ -74,13 +75,32 @@ write_excel <- function(tab, header, filename) {
   WriteXLS(xls, ExcelFileName=filename, BoldHeaderRow=TRUE, FreezeRow=1)
 }
 
+truncate_name = function(sets, maxlen=30) {
+  ind = which(nchar(sets) > maxlen)
+  ret = substr(sets, 1, maxlen)
+  ret[ind] = paste0(ret[ind], "...")
+
+  suf = sub(".*_(UP|DN)$", "\\1", sets[ind]) 
+  suf[which(suf == sets[ind])] = ""
+  ret[ind] = paste0(ret[ind], suf)
+
+  while(any(duplicated(ret))) {
+    ret = truncate_name(sets, maxlen + 5)
+  }
+
+  return(ret)
+}
+
 plot_nes = function(gsea, filename, ntop=10) {
-  gsea = gsea[order(abs(NES), decreasing=TRUE),]
+  gsea = gsea[order(pval),]
   dat = gsea[NES > 0, ][1:ntop,]
   dat = rbind(dat, gsea[NES < 0,][1:ntop,])
   dat = na.omit(dat, "pathway")
   setnames(dat, "pathway", "gene_set")
   setorder(dat, NES)
+
+  # Truncate long names and turn to factor
+  dat[, gene_set := truncate_name(gene_set)]
   dat[, gene_set := factor(gene_set, levels=unique(gene_set))]
 
   # Use spectral but replace midpoint with white
@@ -93,10 +113,10 @@ plot_nes = function(gsea, filename, ntop=10) {
     geom_col(show.legend=FALSE) +
     scale_fill_gradientn(colors=colors) +
     ylab("") +
+    theme_minimal() +
     theme(legend.position="none") +
-    theme(axis.text.y = element_text(size=3)) +
-    theme_minimal()
-  ggsave(filename, plot=plt, width=10, height=4.5)
+    theme(axis.text.y=element_text(size=7))
+  ggsave(filename, plot=plt, width=5, height=4.5)
 }
 
 # Make place for output

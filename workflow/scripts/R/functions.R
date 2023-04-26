@@ -157,7 +157,7 @@ format_tab = function(res, dds, genes, cnt) {
     ret = merge(ret, res)
     ret = merge(ret, cnt)
     ret[, baseMean := NULL]
-    ret = ret[order(abs(ret$log2FoldChange), decreasing=TRUE, na.last=TRUE),]
+    ret = ret[order(ret$pvalue, na.last=TRUE),]
     return(ret)
 }
 
