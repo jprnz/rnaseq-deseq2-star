@@ -90,10 +90,10 @@ git status
 Stage existing files to be commited, add any addtional files that are needed, then commit those changes including a little description
 ```
 git add .
-git commit -a -m "Analysis as of commit date
+git commit -a -m "Analysis as of commit date"
 ```
 
 Update the project's repository
 ```
-git push -u orgin analysis
+git push -u origin analysis
 ```
