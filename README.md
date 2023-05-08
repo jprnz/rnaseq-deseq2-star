@@ -16,8 +16,8 @@ All software dependencies are automatically resolved using [conda](https://docs.
 Local execution and running via [SLURM](https://slurm.schedmd.com/) are supported.  
 When running from an HPC all work should be done on an interactive session.
 
-## Setup
-### Code
+# Setup
+## Code
 From GitLab, fork this project filling out the project name, description, and ensure under namespace "SGT-Projects" is selected.  
 Then, clone this repository into your project directory
 ```
@@ -32,7 +32,7 @@ git push -u origin analysis
 
 Change your default branch to `analysis` in GitLab via setting -> repository -> default branch.
 
-### Conda
+## Conda
 Install conda to `conda/` directory
 ```
 wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
@@ -61,7 +61,7 @@ cd .test
 .././snakemake_slurm.sh -s ../workflow/Snakefile --use-conda -j500
 ```
 
-## Running
+# Running
 Setup the correct genome and ensure the settings in `config/config.yaml` are correct, then prepare the workflow configuration files `fastqs.tsv`, `samples.tsv`, `analysis.yaml`.    
 See documentation [here](config/README.md) for more information.  
 
@@ -79,5 +79,21 @@ This will instruct Snakemake to resolve dependencies using conda and up to `<thr
 When running locally use `snakemake`.  
 See Snakemake documentation for more [command line options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#all-options).
 
-
+# Pushing your changes
 Once an analysis is complete, ensure all your changes are commited and pushed to your project's repository.
+
+Check which files need updating or added to the repository
+```
+git status
+```
+
+Stage existing files to be commited, add any addtional files that are needed, then commit those changes including a little description
+```
+git add .
+git commit -a -m "Analysis as of commit date
+```
+
+Update the project's repository
+```
+git push -u orgin analysis
+```
