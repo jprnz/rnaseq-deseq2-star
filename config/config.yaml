@@ -29,3 +29,8 @@ analysis: config/analysis.yaml
 # Output path
 datadir: "processed"
 
+# Delivery path
+deliverdir: "delivery"
+
+# GSEA gene-sets
+gsea_sets: ["GeneOntologies", "Pathways"]

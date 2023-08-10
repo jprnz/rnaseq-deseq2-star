@@ -20,6 +20,8 @@
 !.test/data/*
 !.test/config
 !.test/config/*
+!.test/resources
+!.test/resources/*
 !Snakefile
 !snakemake.yaml
 !snakemake_slurm.sh

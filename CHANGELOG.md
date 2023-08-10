@@ -1,5 +1,13 @@
 # Changelog
 
+## 2023-06-29
+* Switched to use snakemake's slurm module
+* Added default command-line options via --workflow-profiles 
+* Refactored fastq-combine and fastp to enable job-grouping
+* Added option to restrict heatmaps to use sample found in contrasts
+* Added rules for delivery
+* Added `setup` script
+
 ## 2023-04-26
 * Sort DESeq results by p-value
 * Truncate long names in GSEA enrichment plots 

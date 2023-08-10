@@ -78,7 +78,7 @@ for (cmp in names(res)) {
    fwrite(rnk[[cmp]], file=rnk_filename, sep="\t", col.names=FALSE)
 
    plt_filename <- paste0(prefix, "/Heatmap-", cmp, ".pdf")
-   plot_heatmap(res[[cmp]], dds, plt_filename)
+   plot_heatmap(res, cmp, dds, config, comparisons, plt_filename)
 }
 
 

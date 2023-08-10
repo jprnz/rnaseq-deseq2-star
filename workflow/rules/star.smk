@@ -1,3 +1,19 @@
+# Determine strandedness
+strand_val = config['strandedness']
+if strand_val in ['none', 'yes', 'reverse']:
+    strandedness = [strand_val for v in samples]
+elif os.path.exists(strandedness_file):
+    strand = pd.read_csv(strand_val, index_col="sample", sep="\t", dtype='object')
+    try:
+        strandedness = [strand.loc[v]['strandedness'] for v in samples]
+    except:
+        raise ValueError(
+            f"Check to make sure \'{strandedness_file}\' is formatted "
+            "correctly and all samples are acounted for")
+else:
+    raise ValueError(
+        "Check to make sure \'strandedness\' is formatted correctly in config.yaml")
+
 rule star:
     input:
         r1 = fastpdir + "/{sample}_R1.fastq.gz",
@@ -36,7 +52,6 @@ rule star:
         "   --outStd Log "
         ") &> {log}"
 
-
 rule star_link:
     input:
         stardir + "/{sample}/{sample}_Aligned.sortedByCoord.out.bam"
@@ -69,9 +84,26 @@ rule star_index_bam:
     shell:
         "(set -x; samtools index -\@ 5 {input}) &> {log}"
 
+rule count_matrix:
+    input:
+        expand(stardir + "/{sample}/{sample}_ReadsPerGene.out.tab", sample=samples)
+    output:
+        stardir + "/counts.csv",
+    log:
+        deseqdir + "/logs/count-matrix.log"
+    params:
+        samples=samples,
+        strand=strandedness
+    conda:
+        "../envs/pandas.yaml"
+    script:
+        "../scripts/count-matrix.py"
+
+rule run_counts:
+    input: stardir + "/counts.csv"
 
 rule run_star:
     input:
-        expand(stardir + "/{sample}/{sample}_ReadsPerGene.out.tab", sample=samples) +
-        expand(stardir + "/{sample}.bam.bai", sample=samples)
+        expand(stardir + "/{sample}.bam.bai", sample=samples),
+        expand(stardir + "/{sample}.bam", sample=samples)
 

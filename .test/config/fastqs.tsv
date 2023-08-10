@@ -7,3 +7,7 @@ C	R1	data/a.chr21.1.fq.gz
 C	R2	data/a.chr21.2.fq.gz
 C	R1	data/b.chr21.1.fq.gz
 C	R2	data/b.chr21.2.fq.gz
+D	R1	data/a.chr21.1.fq.gz
+D	R2	data/a.chr21.2.fq.gz
+D	R1	data/b.chr21.1.fq.gz
+D	R2	data/b.chr21.2.fq.gz

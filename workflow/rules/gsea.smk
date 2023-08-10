@@ -1,6 +1,3 @@
-import glob
-
-genesets = ["GeneOntologies", "Pathways"]
 gsea_set_names = config['gsea_set_names']
 gsea_set_paths = config['gsea_set_paths']
 gsea_set_descriptions = config['gsea_set_descriptions']
@@ -36,6 +33,4 @@ checkpoint rule gsea:
 
 rule run_gsea:
     input:
-        expand(gseadir + "/{analysis}/GSEA-{geneset}.xlsx", analysis=analyses, geneset=genesets)
-
-
+        expand(gseadir + "/{analysis}/GSEA-{set}.xlsx", analysis=analyses, set=gsea_sets)

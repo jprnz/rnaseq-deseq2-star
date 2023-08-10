@@ -91,7 +91,6 @@ rule download_genome:
         genome_fasta
     log:
         reference_path + "/logs/{species}-{release}-{build}-dna-fasta.log".format(**reference_args)
-    cache: True
     run:
         get_ensembl_fasta(datatype='dna', download=True, log=log[0], **reference_args)
 
@@ -101,7 +100,6 @@ rule download_annotation:
         genome_gtf
     log:
         reference_path + "/logs/{species}-{release}-{build}-gtf.log".format(**reference_args)
-    cache: True
     run:
         get_ensembl_gtf(download=True, log=log[0], **reference_args)
 
@@ -113,7 +111,6 @@ rule make_genes_file:
         f"{genome_gtf}.genes"
     log:
         reference_path + "/logs/{species}-{release}-{build}-gtf-genes.log".format(**reference_args)
-    cache: True
     script:
         "../scripts/gene-annotations.py"
 
@@ -127,7 +124,6 @@ rule genome_faidx:
         reference_path + "/logs/{species}-{release}-{build}-dna-fai.log".format(**reference_args)
     conda:
         "../envs/samtools.yaml"
-    cache: True
     shell:
         "(set -x; samtools faidx {input}) &> {log}"
 
@@ -144,7 +140,6 @@ rule star_index_genome:
         "../envs/star.yaml"
     resources:
         mem_mb = 48000
-    cache: True
     threads: 16
     shell:
         "(set -x; STAR"

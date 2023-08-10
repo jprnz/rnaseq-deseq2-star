@@ -238,7 +238,6 @@ plot_pca = function(
     pca_x <- data.table(pca$x, keep.rownames=TRUE)
     dat <- data.table(dat, keep.rownames=TRUE)
     plt <- merge(pca_x, dat)
-    browser()
 
     # Get percent variance
     pctvar <- round(100 * (pca$sdev^2 / sum(pca$sdev^2)))
@@ -270,15 +269,39 @@ plot_pca = function(
     invisible(ret)
 }
 
-plot_heatmap = function(res, dds, filename, n=100) {
-    # Subset ids to use (top 100, ranked by pvalue)
+get_contrast_samples = function(dat, cmp, comparisons) {
+    ctr = comparisons$contrast[[cmp]]
+    if (!is.null(ctr) & ctr[1] %in% colnames(ctr)) {
+        ret = rownames(dat[which(dat[,ctr[1]] %in% ctr[2:3]),, drop=FALSE])
+    } else {
+        ret = rownames(dat)
+    }
+    return(ret)
+}
+
+is_true = function(x) {
+    ret = ifelse(!is.null(x) && x == TRUE, TRUE, FALSE)
+    return(ret)
+}
+
+plot_heatmap = function(res, cmp, dds, config, comparisons, filename, n=100) {
+    # Data to plot
     dat = as.data.frame(colData(dds))[, all.vars(design(dds)), drop=FALSE]
-    res = na.omit(as.data.frame(res))
+    res = na.omit(as.data.frame(res[[cmp]]))
     res = res[order(abs(res$log2FoldChange), decreasing=TRUE, na.last=TRUE),]
+
+    # Subset ids to use (top 100, ranked by pvalue)
     ids = na.omit(rownames(res)[1:100])
 
+    # Determine which samples to plot
+    if (is_true(config$heatmap$only_contrasts)) {
+        samples = get_contrast_samples(dat, cmp, comparisons)
+    } else {
+        samples = rownames(dat)
+    }
+
     # Z-score rlog counts
-    mat = assay(rlog(dds))[ids,]
+    mat = assay(rlog(dds))[ids, samples]
     mat = t(scale(t(mat)))
 
     # zlim

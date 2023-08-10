@@ -1,4 +1,6 @@
 import os
+import re
+import glob
 import warnings
 import pandas as pd
 
@@ -6,7 +8,6 @@ from snakemake.utils import min_version
 
 # Turn off performance warnings
 warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
-
 
 # Set min version for Snakemake
 min_version("7.2.1")
@@ -21,10 +22,12 @@ container: "docker://continuumio/miniconda3"
 
 # Paths
 datadir = config['datadir']
+deliverdir = config['deliverdir']
 
 # Configuration variables
 reference_path = config['reference_path']
 reference_args = config['reference_args']
+gsea_sets = config['gsea_sets']
 
 # Load fastq files
 files = (
@@ -49,13 +52,12 @@ if not all([len(v) == 2 for v in sample_pairs]):
 star_index = reference_path + "/{species}/{release}-{build}/star-index".format(**reference_args)
 
 # More paths
-fastqdir   = f"{datadir}/d00_fastq"
-fastpdir   = f"{datadir}/d01_fastp"
-stardir    = f"{datadir}/d02_star"
-rseqcdir   = f"{datadir}/d03_rseqc"
-multiqcdir = f"{datadir}/d04_multiqc"
-deseqdir   = f"{datadir}/d05_deseq"
-gseadir    = f"{datadir}/d06_gsea"
+fastpdir   = f"{datadir}/d00_fastp"
+stardir    = f"{datadir}/d01_star"
+rseqcdir   = f"{datadir}/d02_rseqc"
+multiqcdir = f"{datadir}/d03_multiqc"
+deseqdir   = f"{datadir}/d04_deseq"
+gseadir    = f"{datadir}/d05_gsea"
 
 
 # Set constraints for wildcards
@@ -65,18 +67,17 @@ wildcard_constraints:
 
 # Rules
 include: "rules/reference.smk"
-include: "rules/fastq.smk"
 include: "rules/fastp.smk"
 include: "rules/star.smk"
 include: "rules/rseqc.smk"
 include: "rules/multiqc.smk"
 include: "rules/deseq.smk"
 include: "rules/gsea.smk"
-
+include: "rules/delivery.smk"
 
 # Main target
 rule all:
     input:
-        rules.run_gsea.input,
-        rules.run_deseq.input,
-        rules.run_multiqc.input
+        rules.run_multiqc.input,
+        rules.run_gsea.input
+

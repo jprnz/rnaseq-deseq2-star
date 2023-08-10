@@ -15,6 +15,7 @@ rule fastq_combine:
         fastqdir + "/logs/{sample}_{pair}.log"
     resources:
         mem_mb = 1000
+    group: "fastp"
     run:
         if len(input) > 1:
             cmd = "cat {input} > {output}"

@@ -33,53 +33,50 @@ git push -u origin analysis
 Change your default branch to `analysis` in GitLab via setting -> repository -> default branch.
 
 ## Conda
-Install conda to `conda/` directory
+Install conda and activate the snakemake environment
 ```
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-bash Miniforge3-Linux-x86_64.sh -p conda -b
-```
-
-Activate the base environment
-```
-source conda/bin/activate base
-```
-
-Install mamba package manager
-```
-conda install mamba conda -y
-```
-
-Install Snakemake and activate environment
-```
-mamba env create -f snakemake.yaml
-conda activate snakemake
+./setup
+source conda/bin/activate snakemake
 ```
 
 To run the example data using SLURM, from the `.test/` directory, run
 ```
 cd .test
-.././snakemake_slurm.sh -s ../workflow/Snakefile --use-conda -j500
+snakemake deliver_analysis -s ../workflow/Snakefile --slurm
 ```
 
 # Running
-Setup the correct genome and ensure the settings in `config/config.yaml` are correct, then prepare the workflow configuration files `fastqs.tsv`, `samples.tsv`, `analysis.yaml`.    
-See documentation [here](config/README.md) for more information.  
-
-It is often useful to see what Snakemake is planning on doing without running anything
-```
-snakemake -n
-```
-
-To run the workflow on SLURM one could use
-```
-./snakemake_slurm.sh --use-conda -j<threads>
-```
-
-This will instruct Snakemake to resolve dependencies using conda and up to `<threads>` number of parallel tasks (or number of threads per-task).  
-When running locally use `snakemake`.  
 See Snakemake documentation for more [command line options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#all-options).
+Default command line options are set using `--workflow-profiles` and can be found [here](workflow/profiles/config.yaml).
+You can override these pre-sets by using their command-line equivalents or clear these using `--workflow-profiles none`
 
-# Pushing your changes
+## Analysis
+Setup genome and ensure the settings in `config/config.yaml` are correct, then prepare the workflow configuration files `fastqs.tsv`, `samples.tsv`, `analysis.yaml`.    
+See documentation [here](config/README.md) for more information.
+
+To run the analysis workflow on SLURM (from a interactive compute node): 
+```
+snakemake --slurm
+```
+
+Then, to stage an analysis for delivery, run:
+```
+snakemake deliver_analysis
+```
+
+To run only QC:
+```
+snakemake deliver_qc
+```
+
+Or, just to deiver a counts table and BAM files
+```
+snakemake deliver_counts
+```
+
+# Wrapping up
+
+## Pushing your changes
 Once an analysis is complete, ensure all your changes are commited and pushed to your project's repository.
 
 Check which files need updating or added to the repository
@@ -97,3 +94,9 @@ Update the project's repository
 ```
 git push -u origin analysis
 ```
+
+## Finalizing things
+Once an analysis is complete, ensure that
+- [ ] `Methods.docx` in the delivery folder is accurate and up-to-date
+- [ ] The delivery folder is uploaded to Box
+- [ ] All your changes are commited pushed to your project's repository

@@ -15,39 +15,47 @@ Samples to be included in an analysis need to be defined in a tab-separated file
 See the DESeq2 [manual](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) for more information about setting up a design and using contrasts.
 
 Each analysis that will be performed is defined in `analysis.yaml`. Here, `analyses` is a list that can contain any number of analyses:
+
 ```yaml
 analysese:
     - analysis: name of the analysis
-      samplesheet: file containing sample information (ex. samples.tsv)
-      results:
-          contrasts:
-              - [condition, all] # and / or...
-              - [condition, level, level] # and / or...
-              - [display name, coefficent, coefficent]
-              - # Multiple combinations of the above can be included here...
-          name:
-              - [display name, coefficent] 
-          # Any number of arguments to results() can be added here...
-          parameter: value
-      deseq:
-          # Any number of arguments to DESeq() can be added here...
-          parameter: value
-      pca:
-          pcs: list of two PCs to plot (ex. [PC1, PC2])
-          # Following are optional 
-          color_by: variable used to determine color
-          shape_by: variable used to determine shape
-          samples: 'true' or 'false' include sample names in plot
-          size: size of points
-          alpha: transparency of points, as a percent
-          color_legend: name to use for color legend
-          shape_legend: name to use for shape legend
-    
+        design: ~ analysis formula
+        samplesheet: file containing sample information (ex. samples.tsv)
+        results:
+            contrasts:
+                - [condition, all] and / or...
+                - [condition, level, level] and / or...
+                - [display name, coefficent, coefficent]
+            name:
+                - [display name, coefficent] 
+            <parameter>: <value> 
+        deseq:
+            <parameter>: <value>
+        pca:
+            pcs: list of two PCs to plot
+            # Following are optional 
+            color_by: variable used to determine color
+            shape_by: variable used to determine shape
+            samples: include sample names in plot (true/false)
+            size: size of points
+            alpha: transparency of points, as a percent
+            color_legend: name to use for color legend
+            shape_legend: name to use for shape legend
+        heatmap:
+            only_contrasts: Only use samples defined in contrasts (true/false)
+
     # Addtional analyses can be included... 
     - analysis: name of second analysis
-      samplesheet: ... 
-      design: ...
-      # etc...
+        samplesheet: ... 
+        design: ...
+        # etc ...
 ```
+### Notes
+* Multiple analyses can be defined within this document
 * At least one value for `names` or `contrasts` under `results` needs to be specified. 
 * Both `results` and `deseq` can be used to pass any arbitrary parameter to either `results()` or `DESeq()`. 
+
+### Tips for LRT analysis and more complex analyses
+* For LRT, use 'name' to determine which coefficient use for LogFC 
+* Output of resultsNames() is printed in the log file for the analysis
+

@@ -1,5 +1,5 @@
 analyses:
-  - analysis: first-analysis
+  - analysis: first
     samples: config/first-samples.tsv
     design: ~ condition
     results:
@@ -15,13 +15,14 @@ analyses:
       pcs: [PC1, PC2]
       color_by: condition
 
-  - analysis: second-analysis
+  - analysis: second
     samples: config/second-samples.tsv
-    design: ~ 0 + condition
+    design: ~ condition
+    results:
+      contrasts:
+        - ["condition", "treated", "untreated"]
+    heatmap:
+      only_contrasts: true
     pca:
       pcs: [PC1, PC2]
       color_by: condition
-    results:
-      contrasts:
-        - ["condition", "all"]
-
