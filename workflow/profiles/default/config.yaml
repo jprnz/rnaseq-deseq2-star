@@ -1,0 +1,12 @@
+jobs: 400
+cores: 30
+local-cores: 5
+latency-wait: 240
+max-jobs-per-second: 5
+max-status-checks-per-second: 5
+rerun-incomplete: true
+rerun-triggers: mtime
+use-conda: true
+default-resources:
+  - tmpdir=".temp"
+  - runtime="48h"

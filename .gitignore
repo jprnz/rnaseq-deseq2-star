@@ -2,9 +2,6 @@
 **/.snakemake*
 !config
 !config/*
-!cluster
-!cluster/slurm
-!cluster/slurm/*
 !workflow
 !workflow/*
 !resources
@@ -15,6 +12,9 @@
 !workflow/schemas/*
 !workflow/scripts/*
 !workflow/scripts/R/*
+!workflow/profiles
+!workflow/profiles/*
+!workflow/profiles/default/*
 !.test
 !.test/data
 !.test/data/*

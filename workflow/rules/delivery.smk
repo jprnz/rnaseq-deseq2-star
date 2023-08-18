@@ -37,7 +37,7 @@ def deliver_analysis_targets():
     }
     if len(need) == 1 and use_root:
         ret["output"] = [deliverdir + "/Analysis/analysis.xlsx"]
-        ret["output"] += [deliverdir + "/Analysis/GSEA/GSEA-{s}.xlsx" for s in gsea_sets]
+        ret["output"] += [deliverdir + f"/Analysis/GSEA/GSEA-{s}.xlsx" for s in gsea_sets]
     else:
         ret["output"] = expand([
             deliverdir + "/Analysis/{v}/analysis.xlsx",
