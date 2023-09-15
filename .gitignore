@@ -24,10 +24,8 @@
 !.test/resources/*
 !Snakefile
 !snakemake.yaml
-!snakemake_slurm.sh
 !.gitignore
-!.editorconfig
 !.gitattributes
-!LICENSE
 !README.md
 !CHANGELOG.md
+!setup

@@ -42,6 +42,7 @@ rule star:
         "   --readFilesIn {input.r1} {input.r2}"
         "   --outFileNamePrefix {params.prefix}"
         "   --runThreadN {threads}"
+        "   --runDirPerm All_RWX"
         "   --outSAMtype BAM SortedByCoordinate "
         "   --quantMode GeneCounts "
         "   --alignSJoverhangMin 999 "

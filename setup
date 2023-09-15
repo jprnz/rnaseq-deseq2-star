@@ -1,0 +1,45 @@
+#!/bin/env bash
+set -eo pipefail
+
+path="$PWD"
+conda_url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+conda_file=$(basename $conda_url)
+
+error() {
+  echo "Error: $@"
+  exit 1
+}
+
+# Existing conda directory
+if [ -e "$path/conda" ]; then
+  error "Conda directory already exists. To reinstall, remove and try again."
+fi
+
+# Download and install 
+echo "---Installing conda..."
+(
+  [ -e $conda_file ] && rm $conda_file
+  wget $conda_url
+) || error "Could not download Miniconda from: $conda_url"
+
+(
+  bash $conda_file -b -p "$path/conda"
+  mv $conda_file "$path/conda" 
+) || error "Could not install conda"
+
+
+# Install mamba and update conda
+source conda/bin/activate base
+echo "---Installing mamba..."
+(
+  conda install mamba conda -y
+) || error "Could not install mamba"
+
+# Install snakemake
+echo "---Installing analysis environment..."
+(
+  mamba env create -f snakemake.yaml 
+) || error "Could not create analysis environment"
+
+echo "All done, setup sucessful!"
+

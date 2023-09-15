@@ -102,6 +102,7 @@ rule rseqc_inner_distance:
         "-i {input.bam} "
         "-r {input.bed} "
         "-o {params.prefix} "
+        "{params.extra} "
         ") &> {log}"
 
 
@@ -145,6 +146,7 @@ rule rseqc_read_duplication:
         "(set -x; read_duplication.py "
         "-i {input} "
         "-o {params.prefix} "
+        "{params.extra} "
         ") &> {log}"
 
 
@@ -156,7 +158,6 @@ rule rseqc_readgc:
     log:
         rseqcdir + "/logs/read_gc/{sample}.log",
     params:
-        extra=r"-q 255",
         prefix = rseqcdir + "/{sample}/{sample}"
     conda:
         "../envs/rseqc.yaml"
@@ -185,6 +186,7 @@ rule rseqc_gene_body_coverage:
         "-i {input.bam} "
         "-r {input.bed} "
         "-o {params.prefix} "
+        "{params.extra} "
         "&& rm log.txt) &> {log}"
 
 
