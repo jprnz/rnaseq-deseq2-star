@@ -59,11 +59,19 @@ read_counts = function(filename, coldat) {
     return(ret)
 }
 
-get_all_vs_all = function(val, coldat) {
+get_all_vs_all = function(val, cname, coldat) {
     all = combn(levels(coldat[, val[1]]), 2)
     all = apply(all, 2, rev)
-    colnames(all) = apply(all, 2, paste0, collapse="-vs-")
+    colnames(all) = apply(all, 2, function(x) str_glue(cname, v=c(val[1], x)))
     ret = apply(all, 2, function(x) c(val[1], x[1], x[2]), simplify=FALSE)
+    return(ret)
+}
+
+multi_contrast = function(dat, vars) {
+    # Count the number of contrasts
+    val = sapply(dat, function(x) x[1])
+    num = length(unique(val[which(val %in% vars)]))
+    ret = ifelse(num > 1, TRUE, FALSE)
     return(ret)
 }
 
@@ -71,17 +79,24 @@ parse_contrasts = function(dat, dds) {
     coldat = as.data.frame(colData(dds))
     vars = all.vars(design(dds))
 
+    # Include variable name if needed
+    if (multi_contrast(dat, vars)) {
+        cname = "{v[1]}-{v[2]}-vs-{v[3]}"
+    } else {
+        cname = "{v[2]}-vs-{v[3]}"
+    }
+
     ret = list()
     for (val in dat) {
         # Test for first form of 'contrasts'
         if (val[1] %in% vars) {
             if (all(val[2:3] %in% levels(coldat[, val[1]]))) {
                 # Both conditions specified
-                name = paste0(val[2], "-vs-", val[3])
+                name = str_glue(cname, v=val)
                 ret[[name]] = val
             } else if (val[2] == "all") {
                 # Determine all-vs-all comparisons
-                ret = c(ret, get_all_vs_all(val, coldat))
+                ret = c(ret, get_all_vs_all(val, cname, coldat))
             } else {
                 # Nothing to do
                 stop("Could not determine what comparison to make given:", val, "\n")
@@ -93,6 +108,7 @@ parse_contrasts = function(dat, dds) {
     }
     return(ret)
 }
+
 
 parse_names = function(dat, dds) {
     rn = resultsNames(dds)
